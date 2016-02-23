@@ -1,9 +1,6 @@
 machine:
   environment:
-    IMAGE: sstarcher/aws-env:latest
-    GO15VENDOREXPERIMENT: 1
-    CGO_ENABLED: 0
-    GOOS: linux 
+    IMAGE: sstarcher/aws-env
   services:
     - docker
 
@@ -13,7 +10,7 @@ dependencies:
         -v "$(pwd):/src" 
         -v /var/run/docker.sock:/var/run/docker.sock
         centurylink/golang-builder
-        ${IMAGE}
+        ${IMAGE}:latest
 
 test:
   override:
