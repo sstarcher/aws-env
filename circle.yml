@@ -1,0 +1,26 @@
+machine:
+  environment:
+    IMAGE: sstarcher/aws-env
+    GO15VENDOREXPERIMENT: 1
+    CGO_ENABLED: 0
+    GOOS: linux 
+  services:
+    - docker
+
+dependencies:
+  pre:
+    - go get 
+    - go build .
+  override:
+    - docker build -t $IMAGE .
+
+test:
+  override:
+    - go test
+
+deployment:
+  master: 
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PWD $DOCKER_URL
+      - docker push $IMAGE
