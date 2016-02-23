@@ -10,7 +10,7 @@ dependencies:
   override:
     - mkdir -p "$GOPATH/src/$IMPORT_PATH"
     - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
-    - go get
+    - go get:
         pwd:
           "$GOPATH/src/$IMPORT_PATH"
     - go build .
