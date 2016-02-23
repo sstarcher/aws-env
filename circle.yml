@@ -1,16 +1,12 @@
 machine:
   environment:
-    IMAGE: sstarcher/aws-env
+    IMAGE: sstarcher/aws-env:latest
   services:
     - docker
 
 dependencies:
   override:
-    - | docker run --rm 
-        -v "$(pwd):/src" 
-        -v /var/run/docker.sock:/var/run/docker.sock
-        centurylink/golang-builder
-        ${IMAGE}:latest
+    - docker run --rm -v "$(pwd):/src" -v /var/run/docker.sock:/var/run/docker.sock centurylink/golang-builder ${IMAGE}
 
 test:
   override:
