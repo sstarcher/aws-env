@@ -1,7 +1,7 @@
 machine:
   environment:
     IMAGE: sstarcher/aws-env:latest
-    IMPORT_PATH: "github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
+    IMPORT_PATH: github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
 
   services:
     - docker
@@ -12,7 +12,7 @@ dependencies:
     - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
     - go get:
         pwd:
-          "$GOPATH/src/$IMPORT_PATH"
+          $GOPATH/src/$IMPORT_PATH
     - go build .
     - docker build -t ${IMAGE} .
 
