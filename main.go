@@ -33,6 +33,12 @@ func main() {
 	}
 	shellEncode("REGION", region)
 
+	az, err := metadata.GetMetadata("placement/availability-zone")
+	if err != nil {
+		panic(err)
+	}
+	shellEncode("AVAILABLITY_ZONE", az)
+
 	ec2client := ec2.New(session, aws.NewConfig().WithRegion(region))
 	resp, err := ec2client.DescribeInstances(&ec2.DescribeInstancesInput{
 		InstanceIds: []*string{
