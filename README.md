@@ -22,5 +22,5 @@ AWS_AVAILABLITY_ZONE=us-east-xx
 AWS_REGION=us-east-1
 AWS_ACCOUNT_ALIAS=account_alias
 AWS_TAG_MYTAG=myvalue
-AWS_TAG_NAME=Dns
+AWS_TAG_NAME=ServerTag
 ```
