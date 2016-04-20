@@ -4,3 +4,7 @@ import:
   subpackages:
   - aws/ec2metadata
   - aws/session
+  - service/iam
+  - service/ec2
+  - aws
+- package: github.com/Sirupsen/logrus
