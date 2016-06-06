@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -29,12 +30,10 @@ func init() {
 func main() {
 	session := session.New()
 	metadata := ec2metadata.New(session)
-	f, err := os.Create("/etc/aws")
-	if err != nil {
-		log.Panicf("Failed to create file /etc/aws, %v", err)
-	}
-	defer f.Close()
-	writer := bufio.NewWriter(f)
+	var buffer bytes.Buffer
+	var err error
+
+	writer := bufio.NewWriter(&buffer)
 
 	var instanceID string
 	if metadata.Available() {
@@ -91,4 +90,12 @@ func main() {
 	}
 
 	writer.Flush()
+
+	f, err := os.Create("/etc/aws")
+	if err != nil {
+		log.Panicf("Failed to create file /etc/aws, %v", err)
+	}
+	defer f.Close()
+
+	f.Write(buffer.Bytes())
 }
