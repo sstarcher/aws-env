@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"flag"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/aws"
@@ -27,7 +28,26 @@ func init() {
 	log.SetOutput(os.Stderr)
 }
 
+func shellEncodeOrDie(key, value string, output io.Writer){
+	if value == ""{
+		log.Infof("Empty tag found for value %v, exiting",key)
+		os.Exit(1)
+	} else {
+		shellEncode(key, value, output)
+	}
+}
+
 func main() {
+	var missing = flag.Bool("missing", false, "Error out on missing AWS tags")
+	flag.Parse()
+
+	var encodeFunc func(string, string, io.Writer)
+	if *missing {
+		encodeFunc = shellEncodeOrDie
+	} else {
+		encodeFunc = shellEncode
+	}
+
 	session := session.New()
 	metadata := ec2metadata.New(session)
 	var buffer bytes.Buffer
@@ -41,19 +61,19 @@ func main() {
 		if err != nil {
 			log.Panicf("Failed to fetch instance-id, %v", err)
 		}
-		shellEncode("INSTANCE_ID", instanceID, writer)
+		encodeFunc("INSTANCE_ID", instanceID, writer)
 
 		az, err := metadata.GetMetadata("placement/availability-zone")
 		if err != nil {
 			log.Panicf("Failed to fetch availablity-zone, %v", err)
 		}
-		shellEncode("AVAILABLITY_ZONE", az, writer)
+		encodeFunc("AVAILABLITY_ZONE", az, writer)
 
 		region, err := metadata.Region()
 		if err != nil {
 			log.Panicf("Failed to fetch Region, %v", err)
 		}
-		shellEncode("REGION", region, writer)
+		encodeFunc("REGION", region, writer)
 		session = session.Copy(&aws.Config{Region: aws.String(region)})
 	} else {
 		instanceID = os.Args[1]
@@ -66,7 +86,7 @@ func main() {
 	}
 
 	for _, alias := range aliases.AccountAliases {
-		shellEncode("ACCOUNT_ALIAS", *alias, writer)
+		encodeFunc("ACCOUNT_ALIAS", *alias, writer)
 	}
 
 	log.Info("Describing instances")
@@ -83,8 +103,12 @@ func main() {
 	for _, res := range resp.Reservations {
 		for _, inst := range res.Instances {
 			log.Infof("Instance ID: %s", *inst.InstanceId)
+			if *missing && len(inst.Tags) == 0 {
+				log.Info("No tags for instance found, exiting")
+				os.Exit(1)
+			}
 			for _, tag := range inst.Tags {
-				shellEncode("Tag_"+*tag.Key, *tag.Value, writer)
+				encodeFunc("Tag_"+*tag.Key, *tag.Value, writer)
 			}
 		}
 	}
