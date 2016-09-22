@@ -1,9 +1,9 @@
 machine:
   environment:
-    PROJECT: ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
-    IMAGE: ${PROJECT}:latest
+    IMAGE: ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest
     GOPATH: ${HOME}/.go_workspace
-    IMPORT_PATH: "${GOPATH}/src/github.com/${PROJECT}"
+    IMPORT_PATH: "${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}"
+    APP_PATH: "${IMPORT_PATH}/${CIRCLE_PROJECT_REPONAME}"
 
 dependencies:
   override:
@@ -11,16 +11,14 @@ dependencies:
     - sudo apt-get update
     - sudo apt-get install glide -y
 
-
 test:
   pre:
-    - mkdir -p "${IMPORT_PATH}"
-    - cd "${IMPORT_PATH}" && ls
-    - cd "${IMPORT_PATH}" && pwd
-    - cd "${IMPORT_PATH}" && glide install
+    - mkdir -p "$IMPORT_PATH"
+    - ln -sf "$(pwd)" "${APP_PATH}"
+    - cd "${APP_PATH}" && glide install
   override:
-    - cd "${IMPORT_PATH}" && go test -cover $(glide nv)
-    - cd "${IMPORT_PATH}" && go build .
+    - cd "${APP_PATH}" && go test -cover $(glide nv)
+    - cd "${APP_PATH}" && go build .
     - docker build -t ${IMAGE} .    
 
 
