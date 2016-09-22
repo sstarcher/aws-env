@@ -14,7 +14,6 @@ dependencies:
 test:
   pre:
     - mkdir -p "${IMPORT_PATH}"
-    - ln -sf "$(pwd)" "${IMPORT_PATH}"
     - cd "${IMPORT_PATH}" && glide install
   override:
     - cd "${IMPORT_PATH}" && go test -cover $(glide nv)
