@@ -4,7 +4,7 @@ machine:
     GOPATH: ${HOME}/.go_workspace
     IMPORT_PATH: "${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}"
     APP_PATH: "${IMPORT_PATH}/${CIRCLE_PROJECT_REPONAME}"
-
+    GO15VENDOREXPERIMENT: 1
   services:
     - docker
 
@@ -20,9 +20,7 @@ test:
     - mkdir -p "${IMPORT_PATH}"
     - ln -sf "$(pwd)" "${APP_PATH}"
     - cd "${APP_PATH}" && glide install
-    - pwd
-    - cd "${APP_PATH}" && pwd
-    - cd "${APP_PATH}" && ls
+    - go version
   override:
     - cd "${APP_PATH}" && go test -cover $(glide nv)
     - cd "${APP_PATH}" && go build .
