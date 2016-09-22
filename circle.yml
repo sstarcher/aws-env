@@ -1,8 +1,10 @@
 machine:
   environment:
     IMAGE: ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest
-    IMPORT_PATH: "${HOME}/.go_workspace/src/github.com/${CIRCLE_PROJECT_USERNAME}"
+    GOPATH: ${HOME}/.go_workspace
+    IMPORT_PATH: "${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}"
     APP_PATH: "${IMPORT_PATH}/${CIRCLE_PROJECT_REPONAME}"
+
   services:
     - docker
 
@@ -17,13 +19,15 @@ test:
   pre:
     - mkdir -p "${IMPORT_PATH}"
     - ln -sf "$(pwd)" "${APP_PATH}"
-    - pwd
     - cd "${APP_PATH}" && glide install
+    - pwd
+    - cd "${APP_PATH}" && pwd
+    - cd "${APP_PATH}" && ls
   override:
     - cd "${APP_PATH}" && go test -cover $(glide nv)
-  post:
     - cd "${APP_PATH}" && go build .
-    - docker build -t ${IMAGE} .
+    - docker build -t ${IMAGE} .    
+
 
 deployment:
   master: 
