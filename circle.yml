@@ -2,7 +2,8 @@ machine:
   environment:
     PROJECT: ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
     IMAGE: ${PROJECT}:latest
-    IMPORT_PATH: "${HOME}/.go_workspace/src/github.com/${PROJECT}"
+    GOPATH: ${HOME}/.go_workspace
+    IMPORT_PATH: "${GOPATH}/src/github.com/${PROJECT}"
 
 dependencies:
   override:
@@ -15,6 +16,7 @@ test:
   pre:
     - mkdir -p "${IMPORT_PATH}"
     - cd "${IMPORT_PATH}" && ls
+    - cd "${IMPORT_PATH}" && pwd
     - cd "${IMPORT_PATH}" && glide install
   override:
     - cd "${IMPORT_PATH}" && go test -cover $(glide nv)
