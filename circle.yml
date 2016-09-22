@@ -17,11 +17,12 @@ test:
   pre:
     - mkdir -p "${IMPORT_PATH}"
     - ln -sf "$(pwd)" "${APP_PATH}"
+    - pwd
     - cd "${APP_PATH}" && glide install
   override:
     - cd "${APP_PATH}" && go test -cover $(glide nv)
   post:
-    - go build .
+    - cd "${APP_PATH}" && go build .
     - docker build -t ${IMAGE} .
 
 deployment:
