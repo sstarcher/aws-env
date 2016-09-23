@@ -1,7 +1,7 @@
 machine:
   environment:
-    IMAGE: ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest
-    GOPATH: ${HOME}/.go_workspace
+    IMAGE: "${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest"
+    GOPATH: "${HOME}/.go_workspace"
     IMPORT_PATH: "${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}"
     APP_PATH: "${IMPORT_PATH}/${CIRCLE_PROJECT_REPONAME}"
   services:
@@ -30,3 +30,4 @@ deployment:
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PWD
       - docker push $IMAGE
+      - cp aws-env $CIRCLE_ARTIFACTS
