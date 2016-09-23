@@ -1,7 +1,7 @@
 AWS Environment
 ================
 
-[![CircleCI](https://circleci.com/gh/sstarcher/job-runner.svg?style=svg)](https://circleci.com/gh/sstarcher/job-runner)
+[![CircleCI](https://circleci.com/gh/sstarcher/aws-env.svg?style=svg)](https://circleci.com/gh/sstarcher/aws-env)
 [![](https://imagelayers.io/badge/sstarcher/aws-env:latest.svg)](https://imagelayers.io/?images=sstarcher/aws-env:latest 'Get your own badge on imagelayers.io')
 [![Docker Registry](https://img.shields.io/docker/pulls/sstarcher/aws-env.svg)](https://registry.hub.docker.com/u/sstarcher/aws-env)&nbsp;
 
