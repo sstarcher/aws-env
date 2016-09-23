@@ -4,6 +4,8 @@ machine:
     GOPATH: ${HOME}/.go_workspace
     IMPORT_PATH: "${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}"
     APP_PATH: "${IMPORT_PATH}/${CIRCLE_PROJECT_REPONAME}"
+  services:
+    - docker    
 
 dependencies:
   override:
